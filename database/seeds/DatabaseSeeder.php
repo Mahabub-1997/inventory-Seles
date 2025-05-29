@@ -13,17 +13,19 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-            EmailMessagesSeeder::class,
-            smsMessagesSeeder::class,
-            PosSettingSeeder::class,
-            PaymentMethodSeeder::class,
-            CurrencySeeder::class,
-            SettingSeeder::class,
-            PermissionsSeeder::class,
-            RoleSeeder::class,
-            UserSeeder::class,
+//            PermissionsSeeder::class,
             PermissionRoleSeeder::class,
+//            EmailMessagesSeeder::class,
+//            smsMessagesSeeder::class,
+//            PosSettingSeeder::class,
+//            PaymentMethodSeeder::class,
+//            CurrencySeeder::class,
+//            SettingSeeder::class,
+//            PermissionsSeeder::class,
+//            RoleSeeder::class,
+//            UserSeeder::class,
+//            PermissionRoleSeeder::class,
         ]);
-        
+
     }
 }

@@ -118,6 +118,44 @@
                     </div>
                 </li>
             @endif
+            @if (auth()->user()->can('client_view_all') || auth()->user()->can('client_view_own') || auth()->user()->can('suppliers_view_all') || auth()->user()->can('suppliers_view_own'))
+                <li>
+                    <div
+                        @click="selectCollapse('area-centers')"
+                        :class="selected == 'area-centers' ? 'collapse-active' : 'collapse-deactive'"
+                        class="collapse-button"
+                    >
+                        @include('components.sidebar.collapse-navitem', [
+                            'title'=>__('translate.Area-Centers'),
+                            'icon'=>'components.icons.customers'
+                        ])
+                    </div>
+                    <div
+                        x-ref="area-centers"
+                        x-bind:style="activeCollapse($refs, 'area-centers', selected)"
+                        class="collapse-content"
+                    >
+                        <ul class="list-group">
+                            @if (auth()->user()->can('client_view_all') || auth()->user()->can('client_view_own'))
+                                <li class="">
+                                    @include('components.sidebar.child-navitem', [
+                                        'href'=>'/people/clients',
+                                        'title'=> __('translate.Area')
+                                    ])
+                                </li>
+                            @endif
+                            @if (auth()->user()->can('suppliers_view_all') || auth()->user()->can('suppliers_view_own'))
+                                <li class="">
+                                    @include('components.sidebar.child-navitem', [
+                                        'href'=>'/people/suppliers',
+                                        'title'=> __('translate.Sub-center')
+                                    ])
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                </li>
+            @endif
 
             {{-- Products --}}
             @if (auth()->user()->can('products_add') || auth()->user()->can('products_view')|| auth()->user()->can('category')
