@@ -139,7 +139,7 @@
                             @if (auth()->user()->can('client_view_all') || auth()->user()->can('client_view_own'))
                                 <li class="">
                                     @include('components.sidebar.child-navitem', [
-                                        'href'=>'/people/clients',
+                                        'href'=>'/area-center/area',
                                         'title'=> __('translate.Area')
                                     ])
                                 </li>

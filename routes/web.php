@@ -135,8 +135,8 @@ if ($installed === true) {
                     //------------------------------- warehouses--------------------------\\
                     Route::resource('warehouses', 'WarehousesController');
                 });
-                Route::prefix('Area-center')->group(function() {
-                    Route::resource('Area', 'AreaController');
+                Route::prefix('area-center')->group(function() {
+                    Route::resource('area', 'AreaController');
                     Route::resource('sub-center', 'SubcenterController');
                 });
 

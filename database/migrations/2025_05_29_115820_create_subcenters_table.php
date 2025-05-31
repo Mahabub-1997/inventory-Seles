@@ -15,6 +15,10 @@ class CreateSubcentersTable extends Migration
     {
         Schema::create('subcenters', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('area_id')->nullable();
+            $table->string('area_name')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
