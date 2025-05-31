@@ -202,7 +202,7 @@
             }
 
             // event reload Datatatble
-            $(document).bind('event_category', function (e) {
+            $(document).bind('event_area', function (e) {
                 $('#modal_Area').modal('hide');
                 $('#area_table').DataTable().destroy();
                 Area_datatable();
@@ -292,13 +292,13 @@
                     var self = this;
                     self.SubmitProcessing = true;
                     axios
-                        .post("/products/categories", {
+                        .post("/area-center/area", {
                             name: this.area.name,
-                            code: this.area.status
+                            status: this.area.status
                         })
                         .then(response => {
                             self.SubmitProcessing = false;
-                            $.event.trigger('event_category');
+                            $.event.trigger('event_area');
                             toastr.success('{{ __('translate.Created_in_successfully') }}');
                             self.errors = {};
                         })
@@ -318,11 +318,11 @@
                     axios
                         .put("/products/categories/" + this.area.id, {
                             name: this.area.name,
-                            code: this.area.status
+                            status: this.area.status
                         })
                         .then(response => {
                             self.SubmitProcessing = false;
-                            $.event.trigger('event_category');
+                            $.event.trigger('event_area');
                             toastr.success('{{ __('translate.Updated_in_successfully') }}');
                             self.errors = {};
                         })
@@ -354,7 +354,7 @@
                         axios
                             .delete("/products/categories/" + id)
                             .then(() => {
-                                $.event.trigger('event_category');
+                                $.event.trigger('event_area');
                                 toastr.success('{{ __('translate.Deleted_in_successfully') }}');
 
                             })

@@ -50,15 +50,15 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         $user_auth = auth()->user();
-        if ($user_auth->can('category')){
+        if ($user_auth->can('area_view')){
 
             request()->validate([
                 'name' => 'required',
-                'code' => 'required',
+                'status' => 'required',
             ]);
 
-            Category::create([
-                'code' => $request['code'],
+            Area::create([
+                'status' => $request['status'],
                 'name' => $request['name'],
             ]);
             return response()->json(['success' => true]);
