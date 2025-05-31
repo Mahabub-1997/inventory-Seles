@@ -440,6 +440,8 @@ return [
     'People' => 'People',
     'Area-Centers' => 'Area-Centers',
     'Area' => 'Area',
+    'Enter Area Name' => 'Enter Area Name',
+    'Enter Area Status' => 'Enter Area Status',
     'Sub-center' => 'Sub-center',
     'Successfully_Created' => 'Successfully Created',
     'Successfully_Updated' => 'Successfully Updated',

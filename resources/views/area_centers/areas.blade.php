@@ -58,7 +58,7 @@
                                 <div class="form-group col-md-12">
                                     <label for="code">{{ __('translate.Name') }}<span class="field_required">*</span></label>
                                     <input type="text" v-model="area.name" class="form-control" name="name" id="name"
-                                           placeholder="{{ __('translate.Enter_name') }}">
+                                           placeholder="{{ __('translate.Enter Area Name') }}">
                                     <span class="error" v-if="errors && errors.name">
                   @{{ errors.name[0] }}
                 </span>
@@ -66,8 +66,10 @@
 
                                 <div class="form-group col-md-12">
                                     <label for="name">{{ __('translate.Status') }}<span class="field_required">*</span></label>
-                                    <input type="text" v-model="area.status" class="form-control" name="status" id="status"
-                                           placeholder="{{ __('translate.Enter_name_category') }}">
+                                    <select v-model="area.status" class="form-control" name="status" id="status">
+                                        <option :value="1">{{ __('translate.Active') }}</option>
+                                        <option :value="0">{{ __('translate.Inactive') }}</option>
+                                    </select>
                                     <span class="error" v-if="errors && errors.status">
                   @{{ errors.status[0] }}
                 </span>
@@ -201,7 +203,7 @@
 
             // event reload Datatatble
             $(document).bind('event_category', function (e) {
-                $('#modal_Category').modal('hide');
+                $('#modal_Area').modal('hide');
                 $('#area_table').DataTable().destroy();
                 Area_datatable();
             });
@@ -225,7 +227,7 @@
 
                 setTimeout(() => {
                     NProgress.done()
-                    $('#modal_Category').modal('show');
+                    $('#modal_Area').modal('show');
                 }, 500);
             });
 
@@ -244,11 +246,11 @@
                 editmode: false,
                 SubmitProcessing:false,
                 errors:[],
-                categories: [],
-                category: {
+                areas: [],
+                area: {
                     id: "",
                     name: "",
-                    code: ""
+                    status: 1
                 }
             },
 
@@ -268,7 +270,7 @@
                     this.area = {
                         id: "",
                         name: "",
-                        status: ""
+                        status: 1
                     };
                     this.errors = {};
                 },
@@ -278,7 +280,7 @@
                     axios
                         .get("/products/categories/"+id+"/edit")
                         .then(response => {
-                            this.category   = response.data.category;
+                            this.area   = response.data.area;
                         })
                         .catch(error => {
 
@@ -291,8 +293,8 @@
                     self.SubmitProcessing = true;
                     axios
                         .post("/products/categories", {
-                            name: this.category.name,
-                            code: this.category.code
+                            name: this.area.name,
+                            code: this.area.status
                         })
                         .then(response => {
                             self.SubmitProcessing = false;
@@ -314,9 +316,9 @@
                     var self = this;
                     self.SubmitProcessing = true;
                     axios
-                        .put("/products/categories/" + this.category.id, {
-                            name: this.category.name,
-                            code: this.category.code
+                        .put("/products/categories/" + this.area.id, {
+                            name: this.area.name,
+                            code: this.area.status
                         })
                         .then(response => {
                             self.SubmitProcessing = false;
