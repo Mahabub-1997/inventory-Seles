@@ -424,11 +424,14 @@ if ($installed === true) {
                 'as' => 'lastStep', 'uses' => 'SetupController@lastStep',
             ]);
 
+
             Route::get('setup/lastStep', function () {
                 return redirect('/setup', 301);
             });
 
     }
+Route::get('filter-by-area/{id}', 'ClientController@filterByArea');
+
 
 
 

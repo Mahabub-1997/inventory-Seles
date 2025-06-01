@@ -18,7 +18,7 @@ class SubcenterController extends Controller
         if ($user_auth->can('area_view')){
 
             if ($request->ajax()) {
-                $data = Subcenter::orderBy('id', 'desc')->get();
+                $data = Area::orderBy('id', 'desc')->get();
 
                 return Datatables::of($data)->addIndexColumn()
 
@@ -38,7 +38,7 @@ class SubcenterController extends Controller
                     ->make(true);
             }
 
-            return view('area_centers.subcenters');
+            return view('area_centers.areas');
 
         }
         return abort('403', __('You are not authorized'));
@@ -54,14 +54,10 @@ class SubcenterController extends Controller
 
             request()->validate([
                 'name' => 'required',
-                'area_id' => 'required',
                 'status' => 'required',
             ]);
-            $area = Area::findOrFail($request['area_id']);
 
-            Subcenter::create([
-                'area_id' => $request['area_id'],
-                'area_name' => $area->name,
+            Area::create([
                 'status' => $request['status'],
                 'name' => $request['name'],
             ]);
@@ -83,10 +79,24 @@ class SubcenterController extends Controller
         $user_auth = auth()->user();
         if ($user_auth->can('area_edit')){
 
-            $center = Subcenter::findOrFail($id);
+            $area = Area::findOrFail($id);
 
             return response()->json([
-                'Subcenter' => $center,
+                'area' => $area,
+            ]);
+
+        }
+        return abort('403', __('You are not authorized'));
+    }
+    public function getAll()
+    {
+        $user_auth = auth()->user();
+        if ($user_auth->can('area_edit')){
+
+            $area = Area::all();
+
+            return response()->json([
+                'area' => $area,
             ]);
 
         }
@@ -103,15 +113,11 @@ class SubcenterController extends Controller
 
             request()->validate([
                 'name' => 'required',
-                'area_id' => 'required',
                 'status' => 'required',
             ]);
-            $area = Area::findOrFail($request['area_id']);
 
-            Subcenter::whereId($id)->update([
+            Area::whereId($id)->update([
                 'status' => $request['status'],
-                'area_id' => $request['area_id'],
-                'area_name' => $area->name,
                 'name' => $request['name'],
             ]);
 
@@ -129,7 +135,7 @@ class SubcenterController extends Controller
         $user_auth = auth()->user();
         if ($user_auth->can('area_delete')){
 
-            Subcenter::whereId($id)->delete();
+            Area::whereId($id)->delete();
             return response()->json(['success' => true]);
 
         }
