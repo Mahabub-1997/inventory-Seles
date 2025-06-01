@@ -67,9 +67,9 @@ class ClientController extends Controller
             return abort('403', __('You are not authorized'));
         }else{
 
-            $columns_order = array( 
-                0 => 'id', 
-                3 => 'code', 
+            $columns_order = array(
+                0 => 'id',
+                3 => 'code',
                 4 => 'username',
             );
 
@@ -77,7 +77,7 @@ class ClientController extends Controller
             $order = 'clients.'.$columns_order[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
 
-            $clients_data = Client::where('deleted_at', '=', null)
+            $clients_data = Client::where('deleted_at', '=', null)->with(['area', 'subCenter'])
             ->where(function ($query) use ($user_auth) {
                 if (!$user_auth->can('client_view_all')) {
                     return $query->where('user_id', '=', $user_auth->id);
@@ -116,6 +116,11 @@ class ClientController extends Controller
                 $item['code'] = $client->code;
                 $item['username'] = $client->username;
                 $item['phone'] = $client->phone;
+                if ($client->area!=null || $client->subCenter!=null){
+                    $item['area'] = $client->area->name.'-'.$client->subCenter->name;
+                }else{
+                    $item['area'] = 'N/a';
+                }
                 $item['city'] = $client->city;
 
                 //sell_due
@@ -125,7 +130,7 @@ class ClientController extends Controller
                     ->where('deleted_at', '=', null)
                     ->where('client_id', $client->id)
                     ->sum('GrandTotal');
-    
+
                 $total_paid = DB::table('sales')
                     ->where('sales.deleted_at', '=', null)
                     ->where('sales.client_id', $client->id)
@@ -146,12 +151,12 @@ class ClientController extends Controller
                     ->where('sale_returns.deleted_at', '=', null)
                     ->where('sale_returns.client_id', $client->id)
                     ->sum('paid_amount');
-    
+
                 $total_return_Due = $total_amount_return - $total_paid_return;
 
                 $item['return_due'] =  $this->render_price_with_symbol_placement(number_format($total_return_Due, 2, '.', ','));
 
-             
+
                 //status
 
                 if($client->status == 1){
@@ -166,7 +171,7 @@ class ClientController extends Controller
 
                             '</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 34px, 0px);">';
-                                
+
                                 //check if user has permission "pay_sale_due"
                                  if ($user_auth->can('client_details')){
                                     $item['action'] .=  ' <a class="dropdown-item" href="/people/clients/' .$client->id.'"> <i class="nav-icon  i-Eye font-weight-bold mr-2"></i> ' .trans('translate.Customer_details').'</a>';
@@ -198,12 +203,12 @@ class ClientController extends Controller
 
 
             $json_data = array(
-                "draw"            => intval($request->input('draw')),  
-                "recordsTotal"    => intval($totalRows),  
-                "recordsFiltered" => intval($totalFiltered), 
-                "data"            => $data   
+                "draw"            => intval($request->input('draw')),
+                "recordsTotal"    => intval($totalRows),
+                "recordsFiltered" => intval($totalFiltered),
+                "data"            => $data
             );
-                
+
             echo json_encode($json_data);
         }
     }
@@ -242,18 +247,20 @@ class ClientController extends Controller
             if ($request->hasFile('photo')) {
 
                 $image = $request->file('photo');
-                $filename = time().'.'.$image->extension();  
+                $filename = time().'.'.$image->extension();
                 $image->move(public_path('/images/clients'), $filename);
 
             } else {
                 $filename = 'no_avatar.png';
             }
-            
+
             Client::create([
 
                 'user_id'        => $user_auth->id,
                 'username'       => $request['username'],
                 'code'           => $this->getNumberOrder(),
+                'area_id'        => $request['area_id'],
+                'sub_center_id'  => $request['sub_center_id'],
                 'email'          => $request['email'],
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
@@ -277,11 +284,11 @@ class ClientController extends Controller
     {
         $user_auth = auth()->user();
 		if ($user_auth->can('client_details')){
-            
+
             $helpers = new helpers();
             $currency = $helpers->Get_Currency();
-          
-            $client = Client::where('deleted_at', '=', null)
+
+            $client = Client::where('deleted_at', '=', null)->with(['area', 'subCenter'])
             ->where(function ($query) use ($user_auth) {
                 if (!$user_auth->can('client_view_all')) {
                     return $query->where('user_id', '=', $user_auth->id);
@@ -289,11 +296,16 @@ class ClientController extends Controller
             })->findOrFail($id);
 
             $client_data = [];
-        
+
             $item['full_name'] = $client->username;
             $item['code'] = $client->code;
             $item['phone'] = $client->phone;
             $item['address'] = $client->address;
+            if ($client->area!=null || $client->subCenter!=null){
+                $item['area'] = $client->area->name.'-'.$client->subCenter->name;
+            }else{
+                $item['area'] = 'N/a';
+            }
 
 
             if($client->status == 1){
@@ -346,13 +358,13 @@ class ClientController extends Controller
         $user_auth = auth()->user();
 		if ($user_auth->can('client_edit')){
 
-            $client = Client::where('deleted_at', '=', null)
+            $client = Client::where('deleted_at', '=', null)->with(['area', 'subCenter'])
             ->where(function ($query) use ($user_auth) {
                 if (!$user_auth->can('client_view_all')) {
                     return $query->where('user_id', '=', $user_auth->id);
                 }
             })->findOrFail($id);
-            
+
             return view('clients.edit_client', compact('client'));
 
         }
@@ -382,7 +394,7 @@ class ClientController extends Controller
                 if ($request->photo != $currentAvatar) {
 
                     $image = $request->file('photo');
-                    $filename = time().'.'.$image->extension();  
+                    $filename = time().'.'.$image->extension();
                     $image->move(public_path('/images/clients'), $filename);
                     $path = public_path() . '/images/clients';
                     $userPhoto = $path . '/' . $currentAvatar;
@@ -400,6 +412,8 @@ class ClientController extends Controller
 
             $client = Client::whereId($id)->update([
                 'username'       => $request['username'],
+                'area_id'        => $request['area_id'],
+                'sub_center_id'  => $request['sub_center_id'],
                 'email'          => $request['email'],
                 'city'           => $request['city'],
                 'phone'          => $request['phone'],
@@ -407,7 +421,7 @@ class ClientController extends Controller
                 'status'         => 1,
                 'photo'          => $filename,
             ]);
-          
+
             return response()->json(['success' => true]);
         }
         return abort('403', __('You are not authorized'));
@@ -439,7 +453,7 @@ class ClientController extends Controller
      public function getNumberOrder()
      {
          $last = DB::table('clients')->latest('id')->first();
- 
+
          if ($last) {
              $code = $last->code + 1;
          } else {
@@ -447,7 +461,7 @@ class ClientController extends Controller
          }
          return $code;
      }
- 
+
 
     public function get_client_debt_total($id){
 
@@ -547,12 +561,12 @@ class ClientController extends Controller
                         }
 
             }
-            
+
             return response()->json(['success' => true]);
 
         }
         return abort('403', __('You are not authorized'));
- 
+
      }
 
      public function get_client_debt_return_total($id){
@@ -572,7 +586,7 @@ class ClientController extends Controller
                 ->where('sale_returns.deleted_at', '=', null)
                 ->where('sale_returns.client_id', $id)
                 ->sum('paid_amount');
-            
+
             $return_due =  $item['total_amount_return'] - $item['total_paid_return'];
 
             $payment_methods = PaymentMethod::where('deleted_at', '=', null)->orderBy('id', 'desc')->get(['id','title']);
@@ -606,7 +620,7 @@ class ClientController extends Controller
                     ['payment_statut', '!=', 'paid'],
                     ['client_id', $request->client_id]
                 ])->get();
-    
+
                 $paid_amount_total = $request->montant;
 
                 foreach($client_sell_return_due as $key => $client_sale_return){
@@ -651,14 +665,14 @@ class ClientController extends Controller
                     $paid_amount_total -= $amount;
                 }
             }
-            
+
             return response()->json(['success' => true]);
 
         }
         return abort('403', __('You are not authorized'));
- 
+
      }
- 
+
 
     // generate_random_code_payment
     public function generate_random_code_payment()
@@ -670,7 +684,7 @@ class ClientController extends Controller
         } else {
             return $gen_code;
         }
-        
+
     }
 
     // generate_random_code_payment_return
@@ -683,7 +697,7 @@ class ClientController extends Controller
         } else {
             return $gen_code;
         }
-        
+
     }
 
     public function import_clients_page()
@@ -775,11 +789,11 @@ class ClientController extends Controller
                 //default value
                 $client->status = 1;
                 $client->photo = 'no_avatar.png';
-        
+
                 $client->save();
-               
+
             }
-            
+
             return redirect()->back()->with('success','Clients Imported successfully!');
 
         }

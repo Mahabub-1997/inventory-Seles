@@ -12,7 +12,7 @@ class Client extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-       'id','user_id','username','code','email','city','phone','address','status','photo'
+       'id','user_id','username','code','email','area_id','sub_center_id','city','phone','address','status','photo'
     ];
 
     protected $casts = [
@@ -30,6 +30,14 @@ class Client extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+    public function area()
+    {
+        return $this->belongsTo('App\Models\Area');
+    }
+    public function subCenter()
+    {
+        return $this->belongsTo('App\Models\Subcenter');
     }
 
 }

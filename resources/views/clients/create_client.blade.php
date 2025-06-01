@@ -54,6 +54,30 @@
                                 @{{ errors.email[0] }}
                             </span>
                         </div>
+                        <div class="form-group col-md-4">
+                            <label for="area_id">{{ __('translate.Area') }}</label>
+                            <select v-model="client.area_id" class="form-control" id="area_id" @change="getCenterData(client.area_id)">
+                                <option :value="0">--select--</option>
+                                <option v-for="area in Areas" :key="area.id" :value="area.id">
+                                    @{{area.name}}
+                                </option>
+                            </select>
+                            <span class="error" v-if="errors && errors.area_id">
+                                @{{ errors.area_id[0] }}
+                            </span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sub_center_id">{{ __('translate.Sub-center') }}</label>
+                            <select v-model="client.sub_center_id" class="form-control" id="sub_center_id">
+                                <option :value="0">--select--</option>
+                                <option v-for="sc in Subcenters" :key="sc.id" :value="sc.id">
+                                    @{{sc.name}}
+                                </option>
+                            </select>
+                            <span class="error" v-if="errors && errors.sub_center_id">
+                                @{{ errors.sub_center_id[0] }}
+                            </span>
+                        </div>
 
                         <div class="form-group col-md-4">
                             <label for="photo">{{ __('translate.Image') }}</label>
@@ -103,6 +127,8 @@
             editmode: false,
             SubmitProcessing:false,
             errors:[],
+            Areas:[],
+            Subcenters:[],
             data: new FormData(),
             client: {
                 username: "",
@@ -110,12 +136,14 @@
                 photo:"",
                 status:1,
                 email: "",
+                area_id: 0,
+                sub_center_id: 0,
                 city: "",
                 phone: "",
                 address: "",
-            }, 
+            },
         },
-       
+
         methods: {
 
 
@@ -130,8 +158,30 @@
                 let file = e.target.files[0];
                 this.client.photo = file;
             },
+            Get_Area_Data() {
+                axios
+                    .get("/api/areas")
+                    .then(response => {
+                        this.Areas = response.data.areas;
+                        console.log('response', this.Areas);
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            },
+            getCenterData(id) {
+                axios
+                    .get("/api/center-by-area/"+id)
+                    .then(response => {
+                        this.Subcenters = response.data.subcenters;
+                        console.log('response', this.Subcenters);
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            },
 
-        
+
              //------------------------ Create_Client ---------------------------\\
              Create_Client() {
                 var self = this;
@@ -139,16 +189,18 @@
                 self.data.append("username", self.client.username);
                 self.data.append("status", self.client.status);
                 self.data.append("email", self.client.email);
+                self.data.append("area_id", self.client.area_id);
+                self.data.append("sub_center_id", self.client.sub_center_id);
                 self.data.append("city", self.client.city);
                 self.data.append("phone", self.client.phone);
                 self.data.append("address", self.client.address);
                 self.data.append("photo", self.client.photo);
-                
+
                 axios
                     .post("/people/clients", self.data)
                     .then(response => {
                         self.SubmitProcessing = false;
-                        window.location.href = '/people/clients'; 
+                        window.location.href = '/people/clients';
                         toastr.success('{{ __('translate.Created_in_successfully') }}');
                         self.errors = {};
                 })
@@ -161,9 +213,12 @@
                 });
             },
 
-        
+
         },
         //-----------------------------Autoload function-------------------
+        mounted() {
+            this.Get_Area_Data();
+        },
         created() {
         }
     })

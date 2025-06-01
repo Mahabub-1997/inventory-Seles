@@ -27,7 +27,7 @@
                             </span>
                         </div>
 
-                      
+
                         <div class="form-group col-md-4">
                             <label for="Phone">{{ __('translate.Phone') }}</label>
                             <input type="text" v-model="client.phone" class="form-control" id="Phone"
@@ -45,13 +45,38 @@
                                 @{{ errors.city[0] }}
                             </span>
                         </div>
-         
+
                         <div class="form-group col-md-4">
                             <label for="email">{{ __('translate.Email') }}</label>
                             <input type="text" v-model="client.email" class="form-control" id="email"
                                 id="email" placeholder="{{ __('translate.Enter_email_address') }}">
                             <span class="error" v-if="errors && errors.email">
                                 @{{ errors.email[0] }}
+                            </span>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="area_id">{{ __('translate.Area') }}</label>
+                            <select v-model="client.area_id" class="form-control" id="area_id" @change="getCenterData(client.area_id)">
+                                <option :value="null">--select--</option>
+                                <option v-for="area in Areas" :key="area.id" :value="area.id">
+                                    @{{area.name}}
+                                </option>
+                            </select>
+                            <span class="error" v-if="errors && errors.area_id">
+                                @{{ errors.area_id[0] }}
+                            </span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sub_center_id">{{ __('translate.Sub-center') }}</label>
+                            <select v-model="client.sub_center_id" class="form-control" id="sub_center_id">
+                                <option :value="null">--select--</option>
+                                <option v-for="sc in Subcenters" :key="sc.id" :value="sc.id">
+                                    @{{sc.name}}
+                                </option>
+                            </select>
+                            <span class="error" v-if="errors && errors.sub_center_id">
+                                @{{ errors.sub_center_id[0] }}
                             </span>
                         </div>
 
@@ -96,18 +121,20 @@
 
 <script>
     Vue.component('v-select', VueSelect.VueSelect)
-     
+
     var app = new Vue({
         el: '#section_edit_client',
         data: {
             editmode: false,
             SubmitProcessing:false,
             errors:[],
+            Areas:[],
+            Subcenters:[],
             client: @json($client),
             data: new FormData(),
             old_photo:@json($client->photo),
         },
-       
+
         methods: {
 
             // Selected_Status(value) {
@@ -121,7 +148,29 @@
                 let file = e.target.files[0];
                 this.client.photo = file;
             },
-        
+            Get_Area_Data() {
+                axios
+                    .get("/api/areas")
+                    .then(response => {
+                        this.Areas = response.data.areas;
+                        console.log('response', this.Areas);
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            },
+            getCenterData(id) {
+                axios
+                    .get("/api/center-by-area/"+id)
+                    .then(response => {
+                        this.Subcenters = response.data.subcenters;
+                        console.log('response', this.Subcenters);
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            },
+
             //----------------------- Update_Client ---------------------------\\
             Update_Client() {
                 var self = this;
@@ -129,6 +178,8 @@
                 self.data.append("username", self.client.username);
                 self.data.append("status", self.client.status);
                 self.data.append("email", self.client.email);
+                self.data.append("area_id", self.client.area_id);
+                self.data.append("sub_center_id", self.client.sub_center_id);
                 self.data.append("city", self.client.city);
                 self.data.append("phone", self.client.phone);
                 self.data.append("address", self.client.address);
@@ -141,7 +192,7 @@
                     .post("/people/clients/" + this.client.id, self.data)
                     .then(response => {
                         self.SubmitProcessing = false;
-                        window.location.href = '/people/clients'; 
+                        window.location.href = '/people/clients';
                         toastr.success('{{ __('translate.Updated_in_successfully') }}');
                         self.errors = {};
                     })
@@ -153,9 +204,13 @@
                         toastr.error('{{ __('translate.There_was_something_wronge') }}');
                     });
             },
-           
+
         },
         //-----------------------------Autoload function-------------------
+        mounted() {
+            this.Get_Area_Data();
+            this.getCenterData(this.client.area_id)
+        },
         created() {
         }
     })

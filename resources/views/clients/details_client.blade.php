@@ -37,6 +37,10 @@
                                 <td>{{$client_data['phone']}}</td>
                             </tr>
                             <tr>
+                                <th>{{ __('translate.Area-Centers') }}</th>
+                                <td>{{$client_data['area']}}</td>
+                            </tr>
+                            <tr>
                                 <th>{{ __('translate.Address') }}</th>
                                 <td>{{$client_data['address']}}</td>
                             </tr>
@@ -131,11 +135,11 @@
         data: {
             SubmitProcessing:false,
         },
-       
+
         methods: {
-        
-          
-           
+
+
+
         },
         //-----------------------------Autoload function-------------------
         created() {

@@ -22,6 +22,8 @@ class CreateClientsTable extends Migration {
 			$table->boolean('status')->default(1);
 			$table->string('photo', 192)->nullable();
 			$table->string('email', 192)->nullable();
+			$table->integer('area_id', 191)->nullable();
+			$table->integer('sub_center_id', 191)->nullable();
 			$table->string('country', 191)->nullable();
 			$table->string('city', 191)->nullable();
 			$table->string('phone', 191)->nullable();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Area;
+use App\Models\Subcenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
@@ -45,11 +46,18 @@ Route::get('brands', function(Request $request) {
       'last_page' => $brands->lastPage()
     ]);
   });
-  //get brands
+  //get areas
 Route::get('areas', function(Request $request) {
     $areas = Area::all();
     return response()->json([
       'areas' => $areas
+    ]);
+  });
+  //get centers
+Route::get('center-by-area/{id}', function($id) {
+    $centers = Subcenter::where('area_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+    return response()->json([
+      'subcenters' => $centers
     ]);
   });
 
