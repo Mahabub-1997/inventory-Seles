@@ -137,6 +137,7 @@ if ($installed === true) {
                 });
                 Route::prefix('area-center')->group(function() {
                     Route::resource('area', 'AreaController');
+                    Route::get('area/all', 'AreaController@getAll');
                     Route::resource('sub-center', 'SubcenterController');
                 });
 

@@ -443,6 +443,8 @@ return [
     'Enter Area Name' => 'Enter Area Name',
     'Enter Area Status' => 'Enter Area Status',
     'Sub-center' => 'Sub-center',
+    'EnterCenterName' => 'Enter Center Name',
+    'EnterCenterStatus' => 'Enter Center Status',
     'Successfully_Created' => 'Successfully Created',
     'Successfully_Updated' => 'Successfully Updated',
     'Success' => 'Success',

@@ -77,12 +77,26 @@ class AreaController extends Controller
     public function edit(Request $request, $id)
     {
         $user_auth = auth()->user();
-        if ($user_auth->can('category')){
+        if ($user_auth->can('area_edit')){
 
-            $category = Category::where('deleted_at', '=', null)->findOrFail($id);
+            $area = Area::findOrFail($id);
 
             return response()->json([
-                'category' => $category,
+                'area' => $area,
+            ]);
+
+        }
+        return abort('403', __('You are not authorized'));
+    }
+    public function getAll()
+    {
+        $user_auth = auth()->user();
+        if ($user_auth->can('area_edit')){
+
+            $area = Area::all();
+
+            return response()->json([
+                'area' => $area,
             ]);
 
         }
@@ -95,15 +109,15 @@ class AreaController extends Controller
     {
 
         $user_auth = auth()->user();
-        if ($user_auth->can('category')){
+        if ($user_auth->can('user_edit')){
 
             request()->validate([
                 'name' => 'required',
-                'code' => 'required',
+                'status' => 'required',
             ]);
 
-            Category::whereId($id)->update([
-                'code' => $request['code'],
+            Area::whereId($id)->update([
+                'status' => $request['status'],
                 'name' => $request['name'],
             ]);
 
@@ -119,11 +133,9 @@ class AreaController extends Controller
     public function destroy(Request $request, $id)
     {
         $user_auth = auth()->user();
-        if ($user_auth->can('category')){
+        if ($user_auth->can('area_delete')){
 
-            Category::whereId($id)->update([
-                'deleted_at' => Carbon::now(),
-            ]);
+            Area::whereId($id)->delete();
             return response()->json(['success' => true]);
 
         }
@@ -140,7 +152,7 @@ class AreaController extends Controller
             $selectedIds = $request->selectedIds;
 
             foreach ($selectedIds as $category_id) {
-                Category::whereId($category_id)->update([
+                Area::whereId($category_id)->update([
                     'deleted_at' => Carbon::now(),
                 ]);
             }

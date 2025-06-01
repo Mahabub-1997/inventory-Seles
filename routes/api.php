@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Area;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
@@ -44,4 +45,11 @@ Route::get('brands', function(Request $request) {
       'last_page' => $brands->lastPage()
     ]);
   });
-  
+  //get brands
+Route::get('areas', function(Request $request) {
+    $areas = Area::all();
+    return response()->json([
+      'areas' => $areas
+    ]);
+  });
+
