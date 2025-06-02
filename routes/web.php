@@ -431,7 +431,14 @@ if ($installed === true) {
 
     }
 Route::get('filter-by-area/{id}', 'ClientController@filterByArea');
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear'); // Clears config, route, view caches
+    Artisan::call('config:cache');   // Rebuilds config cache
+    Artisan::call('route:cache');    // Rebuilds route cache
+    Artisan::call('view:cache');     // Compiles views
 
+    return "Application cache cleared and rebuilt successfully.";
+});
 
 
 
