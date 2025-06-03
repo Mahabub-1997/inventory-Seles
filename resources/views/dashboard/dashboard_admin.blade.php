@@ -21,7 +21,7 @@
         <div class="card p-4 d-flex flex-row align-items-center justify-content-between">
           <div>
             <p class="text-primary fw-semibold mb-1 font_17">
-            {{ __('translate.Good_Morning') }}, {{Auth::user()->username}}!
+            {{ __('translate.Hello') }}, {{Auth::user()->username}}!
             </p>
             <p class="p-0 m-0 text-gray-600 font_14">
               {{ __('translate.what_happening_with_your_store') }}
@@ -57,11 +57,11 @@
                 <h4 class="fw-semibold fs-4 mb-1">
                  {{$today_sales}}
                 </h4>
-               
+
               </div>
             </a>
           </div>
-    
+
           <div class="col-md-6 col-sm-6">
             <a href="/purchase/purchases" class="card_dashboard">
               <div class="card card-icon-big mb-4">
@@ -71,11 +71,11 @@
                 <h4 class="fw-semibold fs-4 mb-1">
                 {{$today_purchases}}
                 </h4>
-               
+
               </div>
             </a>
           </div>
-    
+
           <div class="col-md-6 col-sm-6">
             <a href="/sales-return/returns_sale" class="card_dashboard">
               <div class="card card-icon-big mb-4">
@@ -85,11 +85,11 @@
                 <h4 class="fw-semibold fs-4 mb-1">
                  {{$return_sales}}
                 </h4>
-              
+
               </div>
             </a>
           </div>
-    
+
           <div class="col-md-6 col-sm-6">
             <a href="/purchase-return/returns_purchase" class="card_dashboard">
               <div class="card card-icon-big mb-4" >
@@ -204,12 +204,12 @@
             return_purchases:@json($return_purchases),
 
         },
-       
+
         methods: {
 
-     
 
-           
+
+
         },
         //-----------------------------Autoload function-------------------
         created() {
@@ -232,16 +232,16 @@
           NProgress.set(0.1);
 
           get_data(start_date, end_date);
-           
+
       });
-  
+
       var start = moment();
       var end = moment();
-  
+
       function cb(start, end) {
           $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
       }
-  
+
       $('#reportrange').daterangepicker({
             startDate: start,
             endDate: end,
@@ -255,7 +255,7 @@
                 '{{ __('translate.Last_Month') }}': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
         }, cb);
-  
+
       cb(start, end);
 
       function get_data(start_date ='', end_date =''){
@@ -268,7 +268,7 @@
             });
       }
 
-        
+
   });
 </script>
 
@@ -279,9 +279,9 @@
        let echartsalespurchase = document.getElementById('echart_sales_purchase');
        if (echartsalespurchase) {
            let echart_sales_purchase = echarts.init(echartsalespurchase);
-           var dark_heading = "#c2c6dc";
+           var dark_heading = "#00000";
            echart_sales_purchase.setOption({
-   
+
                legend: {
                    borderRadius: 0,
                    orient: "horizontal",
@@ -294,12 +294,12 @@
                    bottom: '0',
                    containLabel: true
                },
-   
+
                tooltip: {
                    show: true,
                    backgroundColor: 'rgba(0, 0, 0, .8)'
                },
-              
+
                xAxis: [{
                    type: "category",
                    data: @json($days),
@@ -317,23 +317,23 @@
                    axisLine: {
                        show: true,
                        color: dark_heading,
-   
+
                        lineStyle: {
                            color: dark_heading
                        }
                    }
                }],
-   
+
                yAxis: [{
                    type: "value",
-   
+
                    axisLabel: {
                        color: dark_heading
                    },
                    axisLine: {
                        show: false,
                        color: dark_heading,
-   
+
                        lineStyle: {
                            color: dark_heading
                        }
@@ -344,7 +344,7 @@
                        interval: "auto"
                    }
                }],
-   
+
                series: [{
                        name: 'Sales',
                        data: @json($sales_chart_data),
@@ -365,7 +365,7 @@
                            }
                        }
                    },
-   
+
                    {
                        name: 'Purchases',
                        data: @json($purchases_chart_data),
@@ -386,8 +386,8 @@
                            }
                        }
                    },
-   
-   
+
+
                ]
            });
            $(window).on('resize', function() {
@@ -403,7 +403,7 @@
             let echart_Top_Clients = echarts.init(echartTopClients);
             echart_Top_Clients.setOption({
               color: ['#4E97FD', '#7AB6FD', '#94C9FE', '#B8DEFE', '#DBF0FE'],
-    
+
                 tooltip: {
                     show: true,
                     backgroundColor: 'rgba(0, 0, 0, .8)'
@@ -415,7 +415,7 @@
                   }%)`;
                 },
 
-    
+
                 series: [{
                         type: 'pie',
                         radius: '60%',
@@ -429,7 +429,7 @@
                             }
                         }
                     }
-    
+
                 ]
             });
             $(window).on('resize', function() {
@@ -444,8 +444,8 @@
         if (echartTopproducts) {
             let echart_Top_produits = echarts.init(echartTopproducts);
             echart_Top_produits.setOption({
-              color: ['#4E97FD', '#7AB6FD', '#94C9FE', '#B8DEFE', '#DBF0FE'],
-    
+                color: ['#fab63c', '#b63cfa', '#573cfa', '#3c80fa', '#DBF0FE'],
+
                 tooltip: {
                     show: true,
                     backgroundColor: 'rgba(0, 0, 0, .8)'
@@ -455,7 +455,7 @@
                   return `${params.name}: (${params.data.value} pc)`;
                 },
 
-    
+
                 series: [{
                         type: 'pie',
                         radius: '60%',
@@ -469,7 +469,7 @@
                             }
                         }
                     }
-    
+
                 ]
             });
             $(window).on('resize', function() {
@@ -479,9 +479,9 @@
             });
         }
 
-   
+
        }, 1000);
-       
+
 </script>
 
 @endsection
