@@ -58,30 +58,30 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-    
+
               <form method="POST" id="filter_adjustment">
                 @csrf
                 <div class="row">
-    
+
                   <div class="form-group col-md-6">
                     <label for="start_date" >{{ __('translate.From_Date') }}
                     </label>
                     <input type="text" class="form-control date" name="start_date" id="start_date"
                       placeholder="{{ __('translate.From_Date') }}" value="">
                   </div>
-    
+
                   <div class="form-group col-md-6">
                     <label for="end_date" >{{ __('translate.To_Date') }} </label>
                     <input type="text" class="form-control date" name="end_date" id="end_date"
                       placeholder="{{ __('translate.To_Date') }}" value="">
                   </div>
-    
+
                   <div class="form-group col-md-6">
                     <label for="Ref" >{{ __('translate.Reference') }}
                     </label>
                     <input type="text" class="form-control" name="Ref" id="Ref" placeholder="{{ __('translate.Ref') }}">
                   </div>
-    
+
                   <div class="form-group col-md-6">
                     <label for="warehouse_id" >{{ __('translate.warehouse') }} </label>
                     <select name="warehouse_id" id="warehouse_id" class="form-control">
@@ -91,12 +91,12 @@
                       @endforeach
                     </select>
                   </div>
-    
-    
+
+
                 </div>
-    
+
                 <div class="row mt-3">
-    
+
                   <div class="col-md-6">
                     <button type="submit" class="btn btn-outline-primary">
                       <i class="i-Filter-2 me-2 font-weight-bold"></i> {{ __('translate.Filter') }}
@@ -106,17 +106,17 @@
                     </button>
                   </div>
                 </div>
-    
-    
+
+
               </form>
-    
+
             </div>
-    
+
           </div>
         </div>
       </div>
     </div>
-   
+
 @endsection
 
 @section('page-js')
@@ -175,9 +175,9 @@
                     {data: 'warehouse_name', name: 'warehouse_name'},
                     {data: 'items', name: 'items'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
-                
+
                 ],
-            
+
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 dom: "<'row'<'col-sm-12 col-md-7'lB><'col-sm-12 col-md-5 p-0'f>>rtip",
                 oLanguage: {
@@ -186,7 +186,7 @@
                     sInfoEmpty: "{{ __('datatable.sInfoEmpty') }}",
                     sInfoFiltered: "{{ __('datatable.sInfoFiltered') }}",
                     sInfoThousands: "{{ __('datatable.sInfoThousands') }}",
-                    sLengthMenu: "_MENU_", 
+                    sLengthMenu: "_MENU_",
                     sLoadingRecords: "{{ __('datatable.sLoadingRecords') }}",
                     sProcessing: "{{ __('datatable.sProcessing') }}",
                     sSearch: "",
@@ -244,7 +244,7 @@
             });
         }
 
-        
+
          // Clear Filter
          $('#Clear_Form').on('click' , function (e) {
             var end_date = new Date();
@@ -275,12 +275,12 @@
             var end_date = $('#end_date').val();
             var Ref = $('#Ref').val();
             let warehouse_id = $('#warehouse_id').val();
-      
+
             $('#adjustment_table').DataTable().destroy();
             adjustment_datatable(start_date, end_date, Ref, warehouse_id);
 
             $('#filter_adjustment_modal').modal('hide');
-           
+
         });
 
         // event reload Datatatble
@@ -305,9 +305,9 @@
             editmode: false,
             SubmitProcessing:false,
             errors:[],
-            adjustments: [], 
+            adjustments: [],
         },
-       
+
         methods: {
 
 
@@ -340,7 +340,7 @@
                     });
                 },
 
-         
+
 
         },
         //-----------------------------Autoload function-------------------

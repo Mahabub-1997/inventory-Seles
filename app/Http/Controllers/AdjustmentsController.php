@@ -36,7 +36,7 @@ class AdjustmentsController extends Controller
                 $array_warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
                 $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $array_warehouses_id)->get(['id', 'name']);
             }
-                        
+
             if(empty($request->warehouse_id)){
                 $warehouse_id = 0;
             }else{
@@ -98,11 +98,11 @@ class AdjustmentsController extends Controller
                     return $row->items;
                 })
 
-                
+
                 ->addColumn('action', function($row) use ($user_auth) {
                     $btn = '';
                     if ($user_auth->can('adjustment_edit')){
-                        $btn .= '<a href="/adjustments/' .$row->id. '/edit" id="' .$row->id. '"  class="edit cursor-pointer ul-link-action text-success"
+                        $btn .= '<a href="/adjustment/adjustments/' .$row->id. '/edit" id="' .$row->id. '"  class="edit cursor-pointer ul-link-action text-success"
                         data-toggle="tooltip" data-placement="top" title="Edit"><i class="i-Edit"></i></a>';
                          $btn .= '&nbsp;&nbsp;';
                     }
@@ -121,7 +121,7 @@ class AdjustmentsController extends Controller
 
         }
         return abort('403', __('You are not authorized'));
-     
+
     }
 
     //---------------- Show Form Create Adjustment ---------------\\
@@ -138,7 +138,7 @@ class AdjustmentsController extends Controller
                 $warehouses_id = UserWarehouse::where('user_id', $user_auth->id)->pluck('warehouse_id')->toArray();
                 $warehouses = Warehouse::where('deleted_at', '=', null)->whereIn('id', $warehouses_id)->get(['id', 'name']);
             }
-            
+
             return view('adjustments.create_adjustment',[
                 'warehouses' => $warehouses
             ]);
@@ -239,7 +239,7 @@ class AdjustmentsController extends Controller
 
     public function show($id){
         //
-    
+
     }
 
     public function edit(Request $request, $id)
@@ -247,7 +247,7 @@ class AdjustmentsController extends Controller
         $user_auth = auth()->user();
 		if ($user_auth->can('adjustment_edit')){
 
-            //get warehouses 
+            //get warehouses
             if($user_auth->is_all_warehouses){
                 $array_warehouses_id = Warehouse::where('deleted_at', '=', null)->pluck('id')->toArray();
                 $warehouses = Warehouse::where('deleted_at', '=', null)->get(['id', 'name']);
@@ -271,7 +271,7 @@ class AdjustmentsController extends Controller
                         return $query->where('user_id', '=', $user_auth->id);
                     }
                 })->findOrFail($id);
-            
+
             if ($Adjustment_data->warehouse_id) {
                 if (Warehouse::where('id', $Adjustment_data->warehouse_id)
                     ->where('deleted_at', '=', null)
@@ -320,7 +320,7 @@ class AdjustmentsController extends Controller
                         ->where('warehouse_id', $Adjustment_data->warehouse_id)
                         ->where('product_variant_id', '=', null)
                         ->first();
-                        
+
                         $data['id'] = $detail->id;
                         $data['detail_id'] = $detail_id += 1;
                         $data['quantity'] = $detail->quantity;
@@ -702,9 +702,9 @@ class AdjustmentsController extends Controller
 
      public function getNumberOrder()
      {
- 
+
          $last = DB::table('adjustments')->latest('id')->first();
- 
+
          if ($last) {
              $item = $last->Ref;
              $nwMsg = explode("_", $item);
@@ -714,7 +714,7 @@ class AdjustmentsController extends Controller
              $code = 'AD_1111';
          }
          return $code;
- 
+
      }
 
 
@@ -724,9 +724,9 @@ class AdjustmentsController extends Controller
     {
         $user_auth = auth()->user();
 		if ($user_auth->can('adjustment_details')){
-            
+
             $details = array();
-            
+
             $Adjustment_data = Adjustment::with('details.product.unit')
                 ->where('deleted_at', '=', null)
                 ->where(function ($query) use ($user_auth) {
