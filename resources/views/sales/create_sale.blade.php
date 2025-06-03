@@ -29,13 +29,13 @@
                 <validation-provider name="date" rules="required" v-slot="validationContext">
                   <div class="form-group">
                     <label for="picker3">{{ __('translate.Date') }}</label>
-                    
-                    <input type="text" 
-                    :state="getValidationState(validationContext)" 
-                    aria-describedby="date-feedback" 
-                    class="form-control" 
-                    placeholder="{{ __('translate.Select_Date') }}"  
-                    id="datetimepicker" 
+
+                    <input type="text"
+                    :state="getValidationState(validationContext)"
+                    aria-describedby="date-feedback"
+                    class="form-control"
+                    placeholder="{{ __('translate.Select_Date') }}"
+                    id="datetimepicker"
                     v-model="sale.date">
                     <span class="error">@{{  validationContext.errors[0] }}</span>
                   </div>
@@ -128,7 +128,7 @@
                             <input class="fw-semibold cart-qty m-0 px-2"
                               @keyup="Verified_Qty(detail,detail.detail_id)" :min="0.00" :max="detail.stock"
                               v-model.number="detail.quantity">
-  
+
                             <span class="increment-decrement btn btn-light rounded-circle"
                               @click="increment(detail ,detail.detail_id)">+</span>
                           </div>
@@ -198,7 +198,7 @@
                   <label for="ordertax">{{ __('translate.Order_Tax') }} </label>
                   <div class="input-group">
                     <input :state="getValidationState(validationContext)" aria-describedby="OrderTax-feedback"
-                      v-model.number="sale.tax_rate" @keyup="keyup_OrderTax()" type="text" class="form-control">
+                      v-model="sale.tax_rate" @keyup="keyup_OrderTax()" type="number" class="form-control">
 
                     <span class="input-group-text">%</span>
                   </div>
@@ -214,14 +214,14 @@
                     v-model.number="sale.discount" @keyup="keyup_Discount()" type="text" class="form-control">
                   <span class="error">@{{ validationContext.errors[0] }}</span>
                 </validation-provider>
-              
+
                 <select class="form-select" id="inputGroupSelect02"
                   @change="Calcul_Total()" v-model="sale.discount_type">
                   <option value="fixed">Fixed</option>
                   <option value="percent">Percent %</option>
                 </select>
               </div>
-            
+
               {{-- Shipping --}}
               <div class="form-group col-md-4">
                 <validation-provider name="Shipping" :rules="{ regex: /^\d*\.?\d*$/}" v-slot="validationContext">
@@ -406,7 +406,7 @@
 
     var app = new Vue({
         el: '#section_add_sale',
-      
+
         data: {
           focused: false,
           search_input:'',
@@ -428,7 +428,7 @@
             notes: "",
             client_id: "",
             warehouse_id: "",
-            tax_rate: 0,
+            tax_rate: "",
             TaxNet: 0,
             shipping: 0,
             discount: 0,
@@ -446,7 +446,7 @@
             manage_stock:"",
             stock: "",
             quantity: 1,
-            discount: "",
+            discount: '',
             DiscountNet: "",
             discount_Method: "",
             name: "",
@@ -470,11 +470,11 @@
           }
         },
 
-       
-       
+
+
     methods: {
 
-      
+
      handleFocus() {
       this.focused = true
     },
@@ -490,14 +490,14 @@
         var d2 = d1 < 10 ? '0' + d1 : d1;
         return [d.getFullYear(), m2, d2].join('-');
     },
-    
+
       //---Validate State Fields
       getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
       },
 
 
-  
+
     //--- Submit Validate Create Sale
     Submit_Sale() {
       this.$refs.create_sale.validate().then(success => {
@@ -508,7 +508,7 @@
         }
       });
     },
-  
+
     //---------------------- Get_sales_units ------------------------------\\
     Get_sales_units(value) {
       axios
@@ -631,7 +631,7 @@
       }, 1000);
     },
 
-    
+
     // Search Products
     search(){
       if (this.timer) {
@@ -661,13 +661,13 @@
       }
     },
 
-    
+
     //------------------------- get Result Value Search Product
     getResultValue(result) {
       return result.code + " " + "(" + result.name + ")";
     },
 
-    
+
     //------------------------- Submit Search Product
     SearchProduct(result) {
       this.product = {};
@@ -716,11 +716,11 @@
     Selected_Customer(value){
       if (value === null) {
         this.sale.client_id = "";
-       
+
       }
     },
 
-    
+
      //------------------------------------ Get Products By Warehouse -------------------------\\
     Get_Products_By_Warehouse(id) {
       // Start the progress bar.
@@ -754,7 +754,7 @@
       }
     },
 
-    
+
     //-----------------------------------Verified QTY ------------------------------\\
     Verified_Qty(detail, id) {
       for (var i = 0; i < this.details.length; i++) {
@@ -860,8 +860,8 @@
           var grand_total =  this.GrandTotal.toFixed(2);
           this.GrandTotal = parseFloat(grand_total);
       }
-      
-     
+
+
     },
 
 
@@ -875,7 +875,7 @@
       }
     },
 
-        
+
         //-- check Qty of  details order if Null or zero
         verifiedForm() {
             if (this.details.length <= 0) {
@@ -911,9 +911,9 @@
     //---------- keyup OrderTax
     keyup_OrderTax() {
       if (isNaN(this.sale.tax_rate)) {
-        this.sale.tax_rate = 0;
+        this.sale.tax_rate = "";
       } else if(this.sale.tax_rate == ''){
-         this.sale.tax_rate = 0;
+         this.sale.tax_rate = '';
         this.Calcul_Total();
       }else {
         this.Calcul_Total();
@@ -924,9 +924,9 @@
     //---------- keyup Discount
     keyup_Discount() {
       if (isNaN(this.sale.discount)) {
-        this.sale.discount = 0;
+        this.sale.discount = "";
       } else if(this.sale.discount == ''){
-         this.sale.discount = 0;
+         this.sale.discount = "";
         this.Calcul_Total();
       }else {
         this.Calcul_Total();
@@ -1014,8 +1014,8 @@
         this.Calcul_Total();
       });
     },
-   
-          
+
+
       },
       //-----------------------------Autoload function-------------------
       created() {
