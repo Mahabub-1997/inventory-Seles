@@ -329,44 +329,44 @@
             @endif
 
             {{-- Quotations --}}
-            @if (auth()->user()->can('quotations_view_all')  || auth()->user()->can('quotations_view_own') || auth()->user()->can('quotations_add'))
-                <li>
-                    <div
-                        @click="selectCollapse('quotation')"
-                        :class="selected == 'quotation' ? 'collapse-active' : 'collapse-deactive'"
-                        class="collapse-button"
-                    >
-                        @include('components.sidebar.collapse-navitem', [
-                            'title'=>__('translate.Quotations'),
-                            'icon'=>'components.icons.order'
-                        ])
-                    </div>
-                    <div
-                        x-ref="quotation"
-                        x-bind:style="activeCollapse($refs, 'quotation', selected)"
-                        class="collapse-content"
-                    >
-                        <ul class="list-group">
-                            @if (auth()->user()->can('quotations_view_all')  || auth()->user()->can('quotations_view_own'))
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/quotation/quotations',
-                                        'title'=> __('translate.All_Quotations')
-                                    ])
-                                </li>
-                            @endif
-                            @can('quotations_add')
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/quotation/quotations/create',
-                                        'title'=> __('translate.Add_Quotation')
-                                    ])
-                                </li>
-                            @endcan
-                        </ul>
-                    </div>
-                </li>
-            @endif
+{{--            @if (auth()->user()->can('quotations_view_all')  || auth()->user()->can('quotations_view_own') || auth()->user()->can('quotations_add'))--}}
+{{--                <li>--}}
+{{--                    <div--}}
+{{--                        @click="selectCollapse('quotation')"--}}
+{{--                        :class="selected == 'quotation' ? 'collapse-active' : 'collapse-deactive'"--}}
+{{--                        class="collapse-button"--}}
+{{--                    >--}}
+{{--                        @include('components.sidebar.collapse-navitem', [--}}
+{{--                            'title'=>__('translate.Quotations'),--}}
+{{--                            'icon'=>'components.icons.order'--}}
+{{--                        ])--}}
+{{--                    </div>--}}
+{{--                    <div--}}
+{{--                        x-ref="quotation"--}}
+{{--                        x-bind:style="activeCollapse($refs, 'quotation', selected)"--}}
+{{--                        class="collapse-content"--}}
+{{--                    >--}}
+{{--                        <ul class="list-group">--}}
+{{--                            @if (auth()->user()->can('quotations_view_all')  || auth()->user()->can('quotations_view_own'))--}}
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/quotation/quotations',--}}
+{{--                                        'title'=> __('translate.All_Quotations')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
+{{--                            @endif--}}
+{{--                            @can('quotations_add')--}}
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/quotation/quotations/create',--}}
+{{--                                        'title'=> __('translate.Add_Quotation')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </li>--}}
+{{--            @endif--}}
 
              {{-- Purchases --}}
             @if (auth()->user()->can('purchases_view_all') || auth()->user()->can('purchases_view_own') || auth()->user()->can('purchases_add'))
@@ -577,38 +577,38 @@
                                 </li>
                             @endcan
 
-                            @can('pos_settings')
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/settings/pos_settings',
-                                        'title'=> __('translate.Pos_Receipt_Settings')
-                                    ])
-                                </li>
-                            @endcan
+{{--                            @can('pos_settings')--}}
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/settings/pos_settings',--}}
+{{--                                        'title'=> __('translate.Pos_Receipt_Settings')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
 
-                            @can('sms_settings')
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/settings/sms_settings',
-                                        'title'=> __('translate.sms_settings')
-                                    ])
-                                </li>
-                            @endcan
-                            @can('notification_template')
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/settings/sms_template',
-                                        'title'=> __('translate.sms_template')
-                                    ])
-                                </li>
+{{--                            @can('sms_settings')--}}
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/settings/sms_settings',--}}
+{{--                                        'title'=> __('translate.sms_settings')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
+{{--                            @can('notification_template')--}}
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/settings/sms_template',--}}
+{{--                                        'title'=> __('translate.sms_template')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
 
-                                <li>
-                                    @include('components.sidebar.child-navitem', [
-                                        'href'=>'/settings/emails_template',
-                                        'title'=> __('translate.emails_template')
-                                    ])
-                                </li>
-                            @endcan
+{{--                                <li>--}}
+{{--                                    @include('components.sidebar.child-navitem', [--}}
+{{--                                        'href'=>'/settings/emails_template',--}}
+{{--                                        'title'=> __('translate.emails_template')--}}
+{{--                                    ])--}}
+{{--                                </li>--}}
+{{--                            @endcan--}}
                             @can('currency')
                                 <li>
                                     @include('components.sidebar.child-navitem', [
