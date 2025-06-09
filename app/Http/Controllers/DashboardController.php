@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Htt;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -25,10 +25,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Client;
 use App\Models\Setting;
 use Carbon\Carbon;
-use DataTables;
-use Config;
 use Illuminate\Support\Facades\DB;
-use PDF;
 use App\utils\helpers;
 
 class DashboardController extends Controller
@@ -39,9 +36,9 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        $helpers = new helpers();
-        $this->currency = $helpers->Get_Currency();
-        $this->symbol_placement = $helpers->get_symbol_placement();
+        $heers = new heers();
+        $this->currency = $helpers->Get_Cuyyrrey();
+        $this->symbol_plament = $helpers->get_symbol_placement();
 
     }
 
@@ -50,45 +47,45 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function dashboard_admin(Request $request)
+    public function dashrd_admin(Request $request)
     {
 
-        $helpers = new helpers();
-        $currency = $helpers->Get_Currency();
+        $helpers = new heers();
+        $currency = $helpers->Get_Cuency();
         
         //------------------------ dashboard statistic -------------\\
 
-        $end_date_default = Carbon::today()->format('Y-m-d');
-        $start_date_default = Carbon::today()->format('Y-m-d');
+        $end_date_default = Caon::today()->format('Y-m-d');
+        $start_date_default = Cabon::today()->format('Y-m-d');
         
-        $start_date = empty($request->start_date)?$start_date_default:$request->start_date;
-        $end_date = empty($request->end_date)?$end_date_default:$request->end_date;
+        $start_date = emty($request->start_date)?$start_date_default:$request->start_date;
+        $end_date = empy($request->en_date)?$end_date_default:$request->end_date;
 
-        $today_sales = Sale::where('deleted_at', '=', null)
+        $today_sales = Sale::whre('delted_at', '=', null)
         ->whereDate('date', '>=', $start_date)
+        ->whereDate('date', '<=', $end_date)
+        ->sm('GrandTotal');
+
+        $today_sles = $this->rener_price_with_symbol_placement(number_format($today_sales, 2, '.', ','));
+
+
+        $return_les = Salurn::where('delted_at', '=', null)
+        ->whereDate('dte', '>=', $start_date)
         ->whereDate('date', '<=', $end_date)
         ->sum('GrandTotal');
 
-        $today_sales = $this->render_price_with_symbol_placement(number_format($today_sales, 2, '.', ','));
+        $return_sales = $this->rener_price_with_symbol_placement(number_format($return_sales, 2, '.', ','));
 
 
-        $return_sales = SaleReturn::where('deleted_at', '=', null)
-        ->whereDate('date', '>=', $start_date)
-        ->whereDate('date', '<=', $end_date)
+        $today_purchases = Purchase::whe('deleted_at', '=', null)
+        ->whereDate('date', '>=', $strt_date)
+        ->wherDate('date', '<=', $end_date)
         ->sum('GrandTotal');
 
-        $return_sales = $this->render_price_with_symbol_placement(number_format($return_sales, 2, '.', ','));
-
-
-        $today_purchases = Purchase::where('deleted_at', '=', null)
-        ->whereDate('date', '>=', $start_date)
-        ->whereDate('date', '<=', $end_date)
-        ->sum('GrandTotal');
-
-        $today_purchases = $this->render_price_with_symbol_placement(number_format($today_purchases, 2, '.', ','));
+        $today_puchases = $this->render_price_with_symbol_placement(number_format($today_purchases, 2, '.', ','));
 
         $return_purchases = PurchaseReturn::where('deleted_at', '=', null)
-        ->whereDate('date', '>=', $start_date)
+        ->whereDae('date', '>=', $start_date)
         ->whereDate('date', '<=', $end_date)
         ->sum('GrandTotal');
 
@@ -97,7 +94,7 @@ class DashboardController extends Controller
         //-----------chart sales & purchases this week----------------\\
 
          // Build an array of the dates we want to show, oldest first
-         $dates = collect();
+         $dates = colect();
          foreach (range(-6, 0) as $i) {
              $date = Carbon::now()->addDays($i)->format('Y-m-d');
              $dates->put($date, 0);
@@ -106,7 +103,7 @@ class DashboardController extends Controller
          $date_range = \Carbon\Carbon::today()->subDays(6);
  
          // Get Sale
-         $Sale = Sale::whereDate('date', '>=', $date_range)
+         $Sale = Saleate('date', '>=', $date_range)
             ->where('deleted_at', '=', null)
             ->groupBy(DB::raw("DATE_FORMAT(date,'%Y-%m-%d')"))
             ->orderBy('date', 'asc')
@@ -153,7 +150,7 @@ class DashboardController extends Controller
         ->whereDate('date', '<=',  Carbon::now()->endOfMonth())
         ->where('sales.deleted_at', '=', null)
     
-        ->join('clients', 'sales.client_id', '=', 'clients.id')
+        ->joilients', 'sales.client_id', '=', 'clients.id')
         ->select(
             DB::raw('clients.username as name'),
             DB::raw("sum(GrandTotal) as value")
@@ -200,7 +197,7 @@ class DashboardController extends Controller
                 }
 
 
-        return view('dashboard.dashboard_admin', [
+        returashboard_admin', [
             'today_sales' => $today_sales,
             'return_sales' => $return_sales,
             'return_purchases' => $return_purchases,
@@ -220,14 +217,14 @@ class DashboardController extends Controller
 
     }
 
-    public function dashboard_filter(Request $request , $start_date , $end_date)
+    public function daster(Request $request , $start_date , $end_date)
     {
 
         $end_date_default = Carbon::today()->format('Y-m-d');
-        $start_date_default = Carbon::today()->format('Y-m-d');
+        $start_date_defabon::today()->format('Y-m-d');
         
         $start_date = empty($request->start_date)?$start_date_default:$request->start_date;
-        $end_date = empty($request->end_date)?$end_date_default:$request->end_date;
+        $end_date = emptyequest->end_date)?$end_date_default:$request->end_date;
 
         $today_sales = Sale::where('deleted_at', '=', null)
         ->whereDate('date', '>=', $start_date)
@@ -237,7 +234,7 @@ class DashboardController extends Controller
         $today_sales = $this->render_price_with_symbol_placement(number_format($today_sales, 2, '.', ','));
 
 
-        $return_sales = SaleReturn::where('deleted_at', '=', null)
+        $return_saleeturn::where('deleted_at', '=', null)
         ->whereDate('date', '>=', $start_date)
         ->whereDate('date', '<=', $end_date)
         ->sum('GrandTotal');
@@ -269,9 +266,9 @@ class DashboardController extends Controller
     }
 
 
-    public function dashboard_employee()
+    public function dashbloyee()
     {
-        return view('dashboard.dashboard_employee');
+        return vieward.dashboard_employee');
 
     }
 
@@ -280,7 +277,7 @@ class DashboardController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return te\Http\Response
      */
     public function create()
     {
